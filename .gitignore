@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+.env
+.env.*
+!.env.example
+.svelte-kit/
+build/
+.dfx/
+.vercel/
+.netlify/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
