@@ -127,7 +127,7 @@
 
 	h1 {
 		font-size: 1.5rem;
-		letter-spacing: 1px;
+		letter-spacing: 0.5px;
 	}
 
 	.canvas-section {
@@ -141,7 +141,7 @@
 
 	.controls-section {
 		background: var(--bg-primary);
-		padding: 30px 20px;
+		padding: 30px 20px 80px 20px;
 		border-top-left-radius: 24px;
 		border-top-right-radius: 24px;
 		box-shadow: 0 -10px 40px rgba(0,0,0,0.05);
@@ -190,7 +190,7 @@
 
 	h3 {
 		font-size: 1rem;
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 		font-family: var(--font-body);
 		color: var(--text-secondary);
 		font-weight: 300;

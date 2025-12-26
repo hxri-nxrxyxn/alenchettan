@@ -11,15 +11,21 @@
     *   **CRITICAL STEP:** Lock this layer. This is your coordinate origin (0,0).
     *   Draw a specific "Neckline Curve" and "Shoulder Seam" path. **Every single future component must align with these lines.**
 
-## Phase 2: AI Generation (The Creative Engine)
-**Goal:** Use AI to generate the *shapes* and *styles* so you don't have to imagine them.
+## Phase 2: AI Generation Strategy
+**Can I use AI to generate a 3x3 grid of icons?**
+Yes, but with a major warning: **AI generates pixels, not physics.**
+*   **The Trap:** If you ask Midjourney/DALL-E for a "grid of 9 collars," they will all be at slightly different angles. Collar #1 might be "top-down," Collar #2 might be "perspective."
+*   **The Fix:** Use AI for **Texture & Style**, not Geometry.
 
-1.  **Prompting:** Use Google AI Studio / Gemini / Midjourney.
-    *   *Prompt:* "Flat fashion technical sketch of a [Mandarin Collar] for a women's kurta, front view, black outline, white background, minimalist line art."
-2.  **Curating:** Generate all 20 variations. Don't worry about them fitting perfectly yet. Just get clear lines.
-3.  **Processing:**
-    *   Take the AI output (PNG/JPG).
-    *   (Optional) Run it through a free vectorizer like `vectorizer.ai` (if free trial exists) or generic "bitmap to svg" converters. *Warning: These auto-vectors are usually "messy" and hard to animate.*
+### Recommended Workflow:
+1.  **Prompting:** "Flat lay fashion design, isolated collar styles, white background, high contrast, 3x3 grid."
+2.  **Processing (Python/Manual):**
+    *   Crop the grid into individual images.
+    *   Remove background (transparent PNG).
+3.  **The "Paper Doll" alignment step (Crucial):**
+    *   Do **NOT** just convert these to SVG and dump them in. They won't fit the neck hole.
+    *   **Option A (Easy):** Use the AI image as a "Pattern Fill" inside a pre-made SVG shape that fits your mannequin.
+    *   **Option B (Hard):** Import the AI image into Figma/Inkscape, place it over your Master Mannequin, and warp/distort it until the neck points match your master anchors.
 
 ## Phase 3: The Integration (The "Engineering" Step)
 **Goal:** Standardize the AI art to fit your code's coordinate system.
