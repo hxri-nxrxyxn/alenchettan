@@ -5,7 +5,8 @@
 	 * @property {string} collar
 	 * @property {string} sleeves
 	 * @property {string} silhouette
-	 * @property {string} fabricColor
+	 * @property {string[]} details
+	 * @property {{ type: string, name?: string, value: string }} fabric
 	 */
 
 	/** @type {{ config: GarmentConfig }} */

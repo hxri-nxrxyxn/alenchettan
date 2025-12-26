@@ -3,23 +3,52 @@
 
 	// Svelte 5 State for the garment configuration
 	let config = $state({
+		silhouette: 'straight',
 		neckline: 'round',
 		collar: 'none',
 		sleeves: 'short',
-		silhouette: 'straight',
-		fabricColor: '#f0f0f0'
+		details: [], // Array for multiple items like buttons/pockets
+		fabric: { type: 'color', value: '#f0f0f0' }
 	});
 
 	// UI State
-	let activeTab = $state('collar'); // 'collar', 'sleeves', 'color'
+	let activeTab = $state('silhouette'); 
 
-	const collars = ['none', 'mandarin', 'peterpan', 'shirt'];
-	const sleeves = ['none', 'short', 'three-quarter', 'full'];
-	const colors = ['#f0f0f0', '#e0e0e0', '#dcdcdc', '#333333', '#a5d6a7'];
+	// Mock Data Assets
+	const silhouettes = ['straight', 'a-line', 'anarkali', 'shirt-hem'];
+	const necklines = ['round', 'v-neck', 'boat', 'square', 'sweetheart'];
+	const collars = ['none', 'mandarin', 'peterpan', 'shirt', 'ruffle'];
+	const sleeves = ['none', 'cap', 'short', 'three-quarter', 'full', 'bell'];
+	const details = ['none', 'buttons-center', 'pocket-left', 'embroidery-neck', 'zipper-back'];
+	
+	const fabrics = [
+		{ type: 'color', name: 'Snow', value: '#ffffff' },
+		{ type: 'color', name: 'Ivory', value: '#f0f0f0' },
+		{ type: 'color', name: 'Charcoal', value: '#333333' },
+		{ type: 'color', name: 'Mint', value: '#a5d6a7' },
+		{ type: 'pattern', name: 'ZigZag', value: 'url(/assets/patterns/zigzag.png)' },
+		{ type: 'pattern', name: 'Floral', value: 'url(/assets/patterns/floral.png)' }
+	];
 
-	function selectCollar(val) { config.collar = val; }
-	function selectSleeve(val) { config.sleeves = val; }
-	function selectColor(val) { config.fabricColor = val; }
+	function updateConfig(key, value) {
+		config[key] = value;
+	}
+
+	function toggleDetail(detail) {
+		if (detail === 'none') {
+			config.details = [];
+			return;
+		}
+		if (config.details.includes(detail)) {
+			config.details = config.details.filter(d => d !== detail);
+		} else {
+			config.details = [...config.details, detail];
+		}
+	}
+	
+	function selectFabric(item) {
+		config.fabric = item;
+	}
 </script>
 
 <div class="design-page">
@@ -32,58 +61,72 @@
 	</div>
 
 	<div class="controls-section">
-		<!-- TAB BAR -->
-		<div class="toolbar">
-			<button 
-				class="tab-btn" 
-				class:active={activeTab === 'collar'} 
-				onclick={() => activeTab = 'collar'}
-			>
-				Collar
-			</button>
-			<button 
-				class="tab-btn" 
-				class:active={activeTab === 'sleeves'} 
-				onclick={() => activeTab = 'sleeves'}
-			>
-				Sleeves
-			</button>
-			<button 
-				class="tab-btn" 
-				class:active={activeTab === 'color'} 
-				onclick={() => activeTab = 'color'}
-			>
-				Color
-			</button>
+		<!-- SCROLLABLE TAB BAR -->
+		<div class="toolbar-scroll-wrapper">
+			<div class="toolbar">
+				{#each ['silhouette', 'neckline', 'collar', 'sleeves', 'details', 'fabric'] as tab}
+					<button 
+						class="tab-btn" 
+						class:active={activeTab === tab} 
+						onclick={() => activeTab = tab}
+					>
+						{tab}
+					</button>
+				{/each}
+			</div>
 		</div>
 
 		<!-- DYNAMIC PANELS -->
 		<div class="panel-container">
-			{#if activeTab === 'collar'}
+			{#if activeTab === 'silhouette'}
 				<section class="option-grid">
-					<h3>Select Collar Style</h3>
+					<h3>Choose Silhouette</h3>
+					<div class="options">
+						{#each silhouettes as item}
+							<button class="option-btn" class:active={config.silhouette === item} onclick={() => updateConfig('silhouette', item)}>{item}</button>
+						{/each}
+					</div>
+				</section>
+
+			{:else if activeTab === 'neckline'}
+				<section class="option-grid">
+					<h3>Choose Neckline</h3>
+					<div class="options">
+						{#each necklines as item}
+							<button class="option-btn" class:active={config.neckline === item} onclick={() => updateConfig('neckline', item)}>{item}</button>
+						{/each}
+					</div>
+				</section>
+
+			{:else if activeTab === 'collar'}
+				<section class="option-grid">
+					<h3>Add Collar</h3>
 					<div class="options">
 						{#each collars as item}
-							<button 
-								class="option-btn" 
-								class:active={config.collar === item}
-								onclick={() => selectCollar(item)}
-							>
-								{item}
-							</button>
+							<button class="option-btn" class:active={config.collar === item} onclick={() => updateConfig('collar', item)}>{item}</button>
 						{/each}
 					</div>
 				</section>
 
 			{:else if activeTab === 'sleeves'}
 				<section class="option-grid">
-					<h3>Select Sleeve Length</h3>
+					<h3>Select Sleeves</h3>
 					<div class="options">
 						{#each sleeves as item}
+							<button class="option-btn" class:active={config.sleeves === item} onclick={() => updateConfig('sleeves', item)}>{item}</button>
+						{/each}
+					</div>
+				</section>
+
+			{:else if activeTab === 'details'}
+				<section class="option-grid">
+					<h3>Add Details (Multi-select)</h3>
+					<div class="options">
+						{#each details as item}
 							<button 
 								class="option-btn" 
-								class:active={config.sleeves === item}
-								onclick={() => selectSleeve(item)}
+								class:active={config.details.includes(item) || (item === 'none' && config.details.length === 0)}
+								onclick={() => toggleDetail(item)}
 							>
 								{item}
 							</button>
@@ -91,16 +134,17 @@
 					</div>
 				</section>
 
-			{:else if activeTab === 'color'}
+			{:else if activeTab === 'fabric'}
 				<section class="option-grid">
-					<h3>Select Fabric Tone</h3>
+					<h3>Select Fabric or Pattern</h3>
 					<div class="color-palette">
-						{#each colors as color}
+						{#each fabrics as item}
 							<button 
 								class="color-btn" 
-								style="background-color: {color}"
-								class:active={config.fabricColor === color}
-								onclick={() => selectColor(color)}
+								style:background={item.type === 'color' ? item.value : `repeating-linear-gradient(45deg, #ccc 0, #ccc 10px, #eee 10px, #eee 20px)`}
+								class:active={config.fabric.value === item.value}
+								onclick={() => selectFabric(item)}
+								title={item.name}
 							>
 							</button>
 						{/each}
@@ -148,17 +192,29 @@
 		z-index: 10;
 	}
 
+	/* Scrollable Toolbar Logic */
+	.toolbar-scroll-wrapper {
+		margin-bottom: 30px;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none; /* Hide scrollbar Firefox */
+		border-bottom: 1px solid var(--border-subtle);
+	}
+	.toolbar-scroll-wrapper::-webkit-scrollbar {
+		display: none; /* Hide scrollbar Chrome/Safari */
+	}
+
 	.toolbar {
 		display: flex;
-		justify-content: center;
-		gap: 30px;
-		margin-bottom: 30px;
-		border-bottom: 1px solid var(--border-subtle);
+		gap: 25px;
 		padding-bottom: 10px;
+		white-space: nowrap;
+		min-width: min-content; /* Ensure items don't wrap */
+		padding-left: 5px; /* Visual balance */
 	}
 
 	.tab-btn {
-		padding: 10px 5px;
+		padding: 10px 0;
 		border: none;
 		background: transparent;
 		cursor: pointer;
@@ -166,6 +222,7 @@
 		font-size: 0.9rem;
 		color: var(--text-secondary);
 		position: relative;
+		text-transform: capitalize;
 		transition: color 0.3s;
 	}
 
@@ -177,7 +234,7 @@
 	.tab-btn.active::after {
 		content: '';
 		position: absolute;
-		bottom: -11px;
+		bottom: 0;
 		left: 0;
 		width: 100%;
 		height: 2px;
@@ -212,11 +269,13 @@
 		font-family: var(--font-body);
 		font-weight: 300;
 		transition: all 0.2s;
+		text-transform: capitalize;
 	}
 
 	.option-btn.active {
 		border-color: var(--text-primary);
 		background: var(--bg-secondary);
+		font-weight: 500;
 	}
 
 	.color-palette {
@@ -237,6 +296,7 @@
 	.color-btn.active {
 		transform: scale(1.15);
 		border-color: var(--text-primary);
+		box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 	}
 
 	.done-btn {
