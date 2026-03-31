@@ -1,10 +1,12 @@
 <script>
 	// Mock data for the Explore page
 	const patterns = $state([
-		{ id: 1, name: 'HIMA3306', type: 'Pattern', color: '#f0f0f0' },
-		{ id: 2, name: 'ZigZag Red', type: 'Pattern', color: '#e8e8e8' },
-		{ id: 3, name: 'Floral Blue', type: 'Fabric', color: '#f5f5f5' },
-		{ id: 4, name: 'Plain Linen', type: 'Fabric', color: '#fafafa' }
+		{ id: 1, name: 'HIMA3306', type: 'Pattern', image: '/assets/materials/1.webp' },
+		{ id: 2, name: 'ZigZag Red', type: 'Pattern', image: '/assets/materials/2.webp' },
+		{ id: 3, name: 'Floral Blue', type: 'Fabric', image: '/assets/materials/3.webp' },
+		{ id: 4, name: 'Plain Linen', type: 'Fabric', image: '/assets/materials/4.webp' },
+		{ id: 5, name: 'Linen Sand', type: 'Fabric', image: '/assets/materials/5.webp' },
+		{ id: 6, name: 'Cotton Mesh', type: 'Fabric', image: '/assets/materials/6.webp' }
 	]);
 </script>
 
@@ -20,7 +22,7 @@
 		<h2>Best Patterns</h2>
 		<div class="horizontal-scroll">
 			{#each patterns as item}
-				<div class="card" style="background-color: {item.color}">
+				<div class="card" style="background-image: url({item.image})">
 					<div class="card-content">
 						<span class="card-label">{item.name}</span>
 					</div>
@@ -33,7 +35,7 @@
 		<h2>Fabrics on Demand</h2>
 		<div class="grid">
 			{#each patterns as item}
-				<div class="card" style="background-color: {item.color}">
+				<div class="card" style="background-image: url({item.image})">
 					<div class="card-content">
 						<span class="card-label">{item.name}</span>
 					</div>
@@ -99,6 +101,8 @@
 		border-radius: 2px; /* Sharper corners for minimal look */
 		position: relative;
 		transition: transform 0.3s ease;
+		background-size: cover;
+		background-position: center;
 	}
 	
 	.card:hover {
